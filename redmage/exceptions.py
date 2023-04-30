@@ -1,0 +1,2 @@
+class RedmageError(Exception):
+    pass

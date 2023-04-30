@@ -1,0 +1,8 @@
+env/
+*.pyc
+TODO.md
+log.txt
+.coverage
+*.db
+scratch*
+dist/
