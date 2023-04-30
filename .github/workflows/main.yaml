@@ -1,0 +1,16 @@
+name: run-tests
+on: [push]
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: [3.8, 3.9, 3.11]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+      - run: poetry intall
+      - run: ./scripts/test.sh
