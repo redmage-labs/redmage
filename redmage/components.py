@@ -40,7 +40,9 @@ class Component(ABC):
 
         if getattr(cls, "__annotations__", None):
             for field, field_type in cls.__annotations__.items():
-                convertor = starlette_convertors[field_type.__name__]
+                convertor = starlette_convertors[
+                    field_type if isinstance(field_type, str) else field_type.__name__
+                ]
                 value = (
                     convertor.to_string(getattr(instance, field, None))
                     if instance
