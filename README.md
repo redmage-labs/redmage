@@ -1,5 +1,7 @@
 # redmage
 
+[![run-tests](https://github.com/redmage-labs/redmage/actions/workflows/main.yaml/badge.svg)](https://github.com/redmage-labs/redmage/actions/workflows/main.yaml)
+
 Redmage is component based library for building [htmx](https://htmx.org/) powered web applications.
 
 It is built on top of the [starlette](https://www.starlette.io/) web framework.
