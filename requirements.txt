@@ -1,0 +1,11 @@
+black==23.3.0
+httpx==0.24.0
+hype-html==1.1.3
+isort==5.12.0
+Jinja2==3.1.2
+mypy==1.1.1
+pycodestyle==2.10.0
+pytest==7.3.1
+pytest-cov==4.0.0
+python-multipart==0.0.6
+starlette==0.26.1
