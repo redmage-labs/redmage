@@ -1,7 +1,7 @@
 import logging
 from inspect import Parameter, getmembers, isfunction, signature
 from types import FunctionType
-from typing import Any, Callable, Dict, List, Optional, Tuple, Type
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
 from starlette.applications import Starlette
 from starlette.convertors import CONVERTOR_TYPES as starlette_convertors
@@ -104,7 +104,7 @@ class Redmage:
 
     def _split_params(
         self,
-        params: Dict[str, Any] | QueryParams,
+        params: Union[Dict[str, Any], QueryParams],
         method_name: str,
         method_fn: Callable,
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
