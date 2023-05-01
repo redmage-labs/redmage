@@ -2,7 +2,9 @@ import logging
 from abc import ABC, abstractmethod
 from collections import OrderedDict
 from inspect import Parameter, signature
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional
+from typing import OrderedDict as OrderedDictType
+from typing import Tuple
 from uuid import uuid1
 
 from starlette.convertors import CONVERTOR_TYPES as starlette_convertors
@@ -39,7 +41,11 @@ class Component(ABC):
         path = f"/{cls.__name__}/{uuid}"
 
         if getattr(cls, "__annotations__", None):
-            for field, field_type in cls.__annotations__.items():
+            annotations = cls.__annotations__
+            annotations.pop("app", None)
+            annotations.pop("render_extensions", None)
+
+            for field, field_type in annotations.items():
                 convertor = starlette_convertors[
                     field_type if isinstance(field_type, str) else field_type.__name__
                 ]
@@ -143,7 +149,7 @@ class Component(ABC):
     def render(self, **exts: Any) -> "Element":  # type: ignore
         ...  # pragma: no cover
 
-    def _filter_render_extensions(self) -> OrderedDict[str, Any]:
+    def _filter_render_extensions(self) -> OrderedDictType[str, Any]:
         args = OrderedDict()
         params = signature(self.render).parameters
         for param in params.values():
