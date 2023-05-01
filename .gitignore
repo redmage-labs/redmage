@@ -6,3 +6,4 @@ log.txt
 *.db
 scratch*
 dist/
+env*

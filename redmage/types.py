@@ -1,7 +1,17 @@
-from enum import Enum
+import importlib
+
+# This is a workaround for Python 3.11 which will have StrEnum
+# but breaks the (str, Enum) inheritance
+try:  # pragma: no cover
+    StrEnum = importlib.import_module("enum").StrEnum
+except AttributeError:  # pragma: no cover
+    from enum import Enum
+
+    class StrEnum(str, Enum):  # type: ignore
+        pass
 
 
-class HTTPMethod(str, Enum):
+class HTTPMethod(StrEnum):  # type: ignore
     GET = "GET"
     POST = "POST"
     PUT = "PUT"
@@ -9,7 +19,7 @@ class HTTPMethod(str, Enum):
     PATCH = "PATCH"
 
 
-class HTMXSwap(str, Enum):
+class HTMXSwap(StrEnum):  # type: ignore
     OUTER_HTML = "outerHTML"
     INNER_HTML = "innerHTML"
     AFTER_BEGIN = "afterbegin"
@@ -20,11 +30,11 @@ class HTMXSwap(str, Enum):
     NONE = "none"
 
 
-class HTMXClass(str, Enum):
+class HTMXClass(StrEnum):  # type: ignore
     Indicator = "htmx-indicator"
 
 
-class HTMXTrigger(str, Enum):
+class HTMXTrigger(StrEnum):  # type: ignore
     EVERY = "every"
     LOAD = "load"
     INTERSECT = "intersect"
@@ -38,7 +48,7 @@ class HTMXTrigger(str, Enum):
     SEARCH = "search"
 
 
-class HTMXTriggerModifier(str, Enum):
+class HTMXTriggerModifier(StrEnum):  # type: ignore
     ONCE = "once"
     CHANGED = "changed"
     THROTTLE = "throttle"
