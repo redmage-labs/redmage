@@ -2,4 +2,4 @@
 
 set -e
 
-uvicorn examples.$1:app.starlette --log-level=debug --reload
+python examples/$1

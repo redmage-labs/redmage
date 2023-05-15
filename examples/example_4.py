@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+import uvicorn
+
 from redmage import Component, Redmage, Target
 from redmage.elements import (
     Body,
@@ -27,7 +29,7 @@ class Index(Component, routes=("/",)):
                 ),
                 Body(
                     Message("Initial message"),
-                    Script(src="https://unpkg.com/htmx.org@1.8.5"),
+                    Script(src="https://unpkg.com/htmx.org@1.9.2"),
                 ),
             )
         )
@@ -59,3 +61,7 @@ class Message(Component):
     @Target.post
     def update_message(self, form: UpdateMessageForm, /):
         self.content = form.content
+
+
+if __name__ == "__main__":
+    uvicorn.run(app.starlette, port=8000)

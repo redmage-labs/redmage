@@ -17,6 +17,9 @@ class TestComponent(Component):
         ...
 
 
+app.create_routes()
+
+
 test_component = TestComponent()
 
 

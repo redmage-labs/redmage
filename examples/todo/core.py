@@ -76,7 +76,7 @@ class TodoAppComponent(
                 ),
                 Body(
                     self.router_component,
-                    Script(src="https://unpkg.com/htmx.org@1.8.5"),
+                    Script(src="https://unpkg.com/htmx.org@1.9.2"),
                 ),
                 data_theme="dark",
             )
@@ -91,17 +91,16 @@ class TodoRouterComponent(Component):
 
     @classmethod
     def get_route(cls, route: str, todo_id: int = 0):
-        match route:
-            case "list":
-                route = TodoListComponent()
-            case "edit":
-                route = TodoEditComponent(todo_id)
-            case "add":
-                route = TodoAddComponent()
-            case _:
-                raise RuntimeError(f"Unknown route: {route}")
+        if route == "list":
+            route_comp = TodoListComponent()
+        elif route == "edit":
+            route_comp = TodoEditComponent(todo_id)
+        elif route == "add":
+            route_comp = TodoAddComponent()
+        else:
+            raise RuntimeError(f"Unknown route: {route}")
 
-        return route
+        return route_comp
 
     def render(self):
         return Div(

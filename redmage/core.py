@@ -26,21 +26,27 @@ class Redmage:
     def __init__(self, debug: bool = False):
         self.debug = debug
         self.routes: List[Route] = []
-        # Could cuase problems if multiple apps are created
+        self.components: List[Tuple[ComponentClass, Optional[Tuple[str]]]] = []
+        # Could cause problems if multiple apps are created
         Component.set_app(self)
 
     @property
     def starlette(self) -> Starlette:
         if not hasattr(self, "_starlette"):
+            self.create_routes()
             self._starlette = Starlette(debug=self.debug, routes=self.routes)
         return self._starlette
+
+    def create_routes(self) -> None:
+        for cls, routes in self.components:
+            if routes:
+                self._register_routes(cls, routes)
+            self._register_targets(cls)
 
     def register_component(
         self, cls: ComponentClass, routes: Optional[Tuple[str]] = None
     ) -> None:
-        if routes:
-            self._register_routes(cls, routes)
-        self._register_targets(cls)
+        self.components.append((cls, routes))
 
     def _get_explicit_route_function(self, cls: ComponentClass) -> Callable:
         async def route_function(request: Request) -> HTMLResponse:
@@ -98,7 +104,12 @@ class Redmage:
     def _convert_value(self, key: str, value: str, fn: Callable) -> Any:
         params = signature(fn).parameters
         if key in params:
-            type_name = params[key].annotation.__name__
+            ann = (
+                params[key].annotation
+                if isinstance(params[key].annotation, str)
+                else params[key].annotation.__name__
+            )
+            type_name = ann
             value = starlette_convertors[type_name].convert(value)
         return value
 

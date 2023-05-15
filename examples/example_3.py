@@ -1,3 +1,5 @@
+import uvicorn
+
 from redmage import Component, Redmage, Target
 from redmage.elements import Body, Button, Doc, Head, Html, Script, Title
 
@@ -11,7 +13,7 @@ class Index(Component, routes=("/",)):
                 Head(Title("Redmage | Example 3")),
                 Body(
                     ClickComponent(),
-                    Script(src="https://unpkg.com/htmx.org@1.8.5"),
+                    Script(src="https://unpkg.com/htmx.org@1.9.2"),
                 ),
             )
         )
@@ -27,3 +29,7 @@ class ClickComponent(Component):
     @Target.post
     def set_count(self, count: int):
         self.count = count
+
+
+if __name__ == "__main__":
+    uvicorn.run(app.starlette, port=8000)

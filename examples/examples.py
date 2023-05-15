@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+import uvicorn
+
 from redmage import Component, Redmage, Target
 from redmage.elements import (
     H1,
@@ -30,7 +32,7 @@ class Index(Component, routes=("/",)):
         return Html(
             Body(
                 Examples(),
-                Script(src="https://unpkg.com/htmx.org@1.8.5"),
+                Script(src="https://unpkg.com/htmx.org@1.9.2"),
             ),
         )
 
@@ -241,3 +243,7 @@ class ActiveSearch(Component):
     @Target.post
     def search(self, search_criteria: SearchCriteria, /):
         self.search_string = search_criteria.search_string
+
+
+if __name__ == "__main__":
+    uvicorn.run(app.starlette, port=8000)

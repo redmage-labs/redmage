@@ -33,7 +33,7 @@ class Counter(Component, routes=("/",)):
                 "Add 1",
                 click=self.add_one(),
             ),
-            Script(src="https://unpkg.com/htmx.org@1.8.5"),
+            Script(src="https://unpkg.com/htmx.org@1.9.2"),
         )
 
     @Target.post
@@ -96,7 +96,7 @@ class Index(Component, routes=("/",)):
                 ),
                 Body(
                     H1("Hello Redmage"),
-                    Script(src="https://unpkg.com/htmx.org@1.8.5"),
+                    Script(src="https://unpkg.com/htmx.org@1.9.2"),
                 ),
             )
         )
@@ -181,7 +181,7 @@ class Index(Component, routes=("/",)):
                 ),
                 Body(
                     ChildComponent(),
-                    Script(src="https://unpkg.com/htmx.org@1.8.5"),
+                    Script(src="https://unpkg.com/htmx.org@1.9.2"),
                 ),
             )
         )

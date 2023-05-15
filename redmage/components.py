@@ -115,7 +115,12 @@ class Component(ABC):
                     and param_value.name != "self"
                     and len(positional_or_keyword_params) >= n
                 ):
-                    convertor = starlette_convertors[param_value.annotation.__name__]
+                    ann = (
+                        param_value.annotation
+                        if isinstance(param_value.annotation, str)
+                        else param_value.annotation.__name__
+                    )
+                    convertor = starlette_convertors[ann]
                     value = convertor.to_string(
                         positional_or_keyword_params[n - offset]
                     )
@@ -132,10 +137,12 @@ class Component(ABC):
                     and param_value.kind != Parameter.POSITIONAL_ONLY
                     and param_value.name != "self"
                 ):
-                    path += (
-                        f"/{{{method_name}__{param_value.name}:"
-                        f"{param_value.annotation.__name__}}}"
+                    ann = (
+                        param_value.annotation
+                        if isinstance(param_value.annotation, str)
+                        else param_value.annotation.__name__
                     )
+                    path += f"/{{{method_name}__{param_value.name}:{ann}}}"
 
         return path
 

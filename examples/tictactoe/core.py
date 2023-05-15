@@ -32,7 +32,7 @@ class Index(Component, routes=("/",)):
             ),
             Body(
                 Board(),
-                Script(src="https://unpkg.com/htmx.org@1.8.5"),
+                Script(src="https://unpkg.com/htmx.org@1.9.2"),
             ),
         )
 

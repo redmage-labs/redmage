@@ -1,10 +1,12 @@
 from dataclasses import dataclass
+from typing import Optional
 
 import pytest
+from starlette.convertors import Convertor, register_url_convertor
 from starlette.testclient import TestClient
 
 from redmage import Component, Redmage, Target
-from redmage.elements import Div, Element, Form, Input
+from redmage.elements import Div, Form, Input
 from redmage.exceptions import RedmageError
 from redmage.types import HTMXClass, HTMXSwap
 
@@ -39,6 +41,7 @@ def test_redmage_register_component_with_no_targets():
         def render(self):
             return "Hello World"
 
+    app.create_routes()
     assert len(app.routes) == 0
 
 
@@ -49,6 +52,7 @@ def test_redmage_register_component_index():
         def render(self):
             return Div("Hello World")
 
+    app.create_routes()
     assert len(app.routes) == 1
     assert app.routes[0].path == "/"
 
@@ -69,6 +73,7 @@ def test_redmage_register_component_with_get_target_with_args():
             self.param1 = param1
             self.param2 = param2
 
+    app.create_routes()
     assert len(app.routes) == 1
     assert app.routes[0].name == "test_target"
     assert (
@@ -99,6 +104,7 @@ def test_redmage_register_component_with_post_target_with_args():
             self.param1 = test_serializer.param1
             self.param2 = test_serializer.param2
 
+    app.create_routes()
     assert len(app.routes) == 1
     assert app.routes[0].name == "test_target"
     assert app.routes[0].path == "/TestComponent/{id:str}/test_target"
@@ -128,6 +134,7 @@ def test_redmage_register_component_with_put_target_with_args():
             self.param1 = test_serializer.param1
             self.param2 = test_serializer.param2
 
+    app.create_routes()
     assert len(app.routes) == 1
     assert app.routes[0].name == "test_target"
     assert app.routes[0].path == "/TestComponent/{id:str}/test_target"
@@ -157,6 +164,7 @@ def test_redmage_register_component_with_patch_target_with_args():
             self.param1 = test_serializer.param1
             self.param2 = test_serializer.param2
 
+    app.create_routes()
     assert len(app.routes) == 1
     assert app.routes[0].name == "test_target"
     assert app.routes[0].path == "/TestComponent/{id:str}/test_target"
@@ -181,6 +189,7 @@ def test_redmage_register_component_with_delete_target_with_args():
             self.param1 = param1
             self.param2 = param2
 
+    app.create_routes()
     assert len(app.routes) == 1
     assert app.routes[0].name == "test_target"
     assert (
@@ -206,6 +215,7 @@ def test_redmage_register_component_with_get_target_with_query_params():
             self.param1 = param1
             self.param2 = param2
 
+    app.create_routes()
     assert len(app.routes) == 1
     assert app.routes[0].name == "test_target"
     assert app.routes[0].path == "/TestComponent/{id:str}/test_target"
@@ -239,6 +249,7 @@ def test_redmage_register_component_with_annotations():
             self.param1 = param1
             self.param2 = param2
 
+    app.create_routes()
     assert len(app.routes) == 1
     assert app.routes[0].name == "test_target"
     assert (
@@ -277,6 +288,40 @@ def test_redmage_create_get_target():
     assert (
         response.text.strip()
         == f'<div id="TestComponent-1" hx-swap="{HTMXSwap.OUTER_HTML}" hx-target="#TestComponent-1" hx-get="/TestComponent/1/test_target/1?test_target__param2=test">Hello World</div>'
+    )
+
+
+def test_redmage_create_get_target_with_optional_parameter():
+    app = Redmage()
+
+    class OptionalInt(Convertor):
+        regex = "[0-9]+|None"
+
+        def convert(self, value: str) -> Optional[int]:
+            return int(value) if value != "None" else None
+
+        def to_string(self, value: Optional[int]) -> str:
+            return str(value) if value else "None"
+
+    register_url_convertor("Optional[int]", OptionalInt())
+
+    class TestComponent(Component):
+        def render(self):
+            return Div(
+                f"Hello World",
+                target=self.test_target(1, param2=2),
+            )
+
+        @Target.get
+        def test_target(self, param1: int, param2: "Optional[int]" = None):
+            ...
+
+    client = TestClient(app.starlette)
+    response = client.get("/TestComponent/1/test_target/1/?test_target__param2=None")
+    assert response.status_code == 200
+    assert (
+        response.text.strip()
+        == f'<div id="TestComponent-1" hx-swap="{HTMXSwap.OUTER_HTML}" hx-target="#TestComponent-1" hx-get="/TestComponent/1/test_target/1?test_target__param2=2">Hello World</div>'
     )
 
 
