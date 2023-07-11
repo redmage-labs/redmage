@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "redmage"
-version = "0.2.2"
+version = "0.2.3"
 description = "A component based library for building htmx powered applications."
 authors = ["Scott Russell <me@scottrussell.net>"]
 license = "MIT"

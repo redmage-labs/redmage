@@ -44,7 +44,8 @@ class Redmage:
                     routes=self.routes,
                     middleware=self.middleware,
                 )
-            self._starlette = Starlette(debug=self.debug, routes=self.routes)
+            else:
+                self._starlette = Starlette(debug=self.debug, routes=self.routes)
         return self._starlette
 
     def create_routes(self) -> None:
