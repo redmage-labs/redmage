@@ -72,6 +72,12 @@ At this point our app won't do anything because we haven't registered any routes
 uvicorn <module>:<filename>:app.starlette
 ```
 
+### Application Options
+
+You can pass the following keyword arguments to the Redmage constructor which  work as proxies to the underlying Starlette app.
+
+* debug
+* middleware
 
 ## First Component
 
@@ -144,6 +150,7 @@ Additionally, a number of htmx specific keywords are supported.
 | swap_oob    | hx-swap-oob                          | bool           | False               |               |                                    |
 | confirm     | hx-confirm                           | bool           | False               |               |                                    |
 | boost       | hx-boost                             | bool           | False               |               |                                    |
+| on          | hx-on                                | str            | None                |               |                                    |
 | indicator   | N/A                                  | bool           | False               |               |                                    |
 | target      | hx-target, hx-\<method\>             | Target         | None                |               | See Target section below           |
 | click       | hx-target, hx-\<method\>, hx-trigger | Target         | None                |               | See Trigger keywords section below |
@@ -234,6 +241,35 @@ class ClickComponent(Component):
 ```
 
 When the button is clicked an HTTP POST request is issued to our application. The **set_count** method is ran, updating the component state, and the component is re-rendered and swapped into the DOM.
+
+By default, if the target method returns **None** then **self** is rendered. We could also explicitly return self, another component, or a tuple of components (this can be useful in conjunction with out of bounds swaps).
+
+### Options
+
+A target method can also return a dictionary of options to alter the response. It supports the following keys:
+
+* headers (dict[str: str])
+
+```
+from redmage import Target
+
+
+class ClickComponent(Component):
+
+    def __init__(self):
+        self.count = 0
+
+    def render(self):
+        return Button(
+            self.count,
+            target=self.set_count(self.count + 1)
+        )
+
+    @Target.post
+    def set_count(self, count: int):
+        self.count = count
+        return self {"headers": {"HX-Location": "/changeup"}}
+```
 
 ### Target method arguments
 

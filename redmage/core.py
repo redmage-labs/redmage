@@ -104,6 +104,15 @@ class Redmage:
                     **{**comp_params, **comp_query_params},
                 )
             if isinstance(components, tuple):
+                # if the last element in the tuple is a dict
+                # then it's an options dict which can contain headers
+                if isinstance(components[-1], dict):
+                    options = components[-1]
+                    headers = options.get("headers", {})
+                    components = components[:-1]
+                    return HTMLResponse(
+                        "\n".join([str(c) for c in components]), headers=headers
+                    )
                 return HTMLResponse("\n".join([str(c) for c in components]))
             elif components:
                 return HTMLResponse(str(components))

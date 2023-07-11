@@ -56,3 +56,16 @@ class HTMXTriggerModifier(StrEnum):  # type: ignore
     FROM = "from"
     ROOT = "root"
     THRESHHOLD = "threshold"
+
+
+class HTMXHeaders(StrEnum):  # type: ignore
+    HX_LOCATION = "HX-Location"
+    HX_PUSH_URL = "HX-Push-Url"
+    HX_REDIRECT = "HX-Redirect"
+    HX_REFRESH = "HX-Refresh"
+    HX_REPLACE_URL = "HX-Replace-Url"
+    HX_RESWAP = "HX-Reswap"
+    HX_RETARGET = "HX-Retarget"
+    HX_TRIGGER = "HX-Trigger"
+    HX_TRIGGER_AFTER_SETTLE = "HX-Trigger-After-Settle"
+    HX_TRIGGER_AFTER_SWAP = "HX-Trigger-After-Swap"

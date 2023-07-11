@@ -8,7 +8,7 @@ from starlette.testclient import TestClient
 from redmage import Component, Redmage, Target
 from redmage.elements import Div, Form, Input
 from redmage.exceptions import RedmageError
-from redmage.types import HTMXClass, HTMXSwap
+from redmage.types import HTMXClass, HTMXHeaders, HTMXSwap
 
 
 def test_sanity():
@@ -531,6 +531,23 @@ def test_redmage_component_that_returns_multiple_components():
         response.text.strip()
         == '<div id="ChildComponent-1">Hello Child</div>\n\n<div id="ChildComponent-1">Hello Child</div>'
     )
+
+
+def test_redmage_component_that_returns_headers_in_the_options_dict():
+    app = Redmage()
+
+    class TestComponent(Component):
+        def render(self):
+            return Div(f"Hello World")
+
+        @Target.get
+        def test_target(self):
+            return Div(f"Hello World"), {"headers": {HTMXHeaders.HX_LOCATION: "test"}}
+
+    client = TestClient(app.starlette)
+    response = client.get("/TestComponent/1/test_target")
+    assert response.status_code == 200
+    assert response.headers[HTMXHeaders.HX_LOCATION] == "test"
 
 
 def test_redamge_component_with_render_extenstion():
