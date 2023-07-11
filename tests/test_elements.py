@@ -67,6 +67,11 @@ def test_element_boost():
     assert str(div).strip() == '<div hx-boost="true">test</div>'
 
 
+def test_element_on():
+    div = Div("test", on="click")
+    assert str(div).strip() == '<div hx-on="click">test</div>'
+
+
 def test_doc():
     doc = Doc(Div("test"))
     assert str(doc).strip() == "<!DOCTYPE html>\n<div>test</div>"
