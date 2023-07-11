@@ -1,8 +1,9 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Any, Optional
 
 import pytest
 from starlette.convertors import Convertor, register_url_convertor
+from starlette.responses import HTMLResponse
 from starlette.testclient import TestClient
 
 from redmage import Component, Redmage, Target
@@ -542,7 +543,11 @@ def test_redmage_component_that_returns_headers_in_the_options_dict():
 
         @Target.get
         def test_target(self):
-            return Div(f"Hello World"), {"headers": {HTMXHeaders.HX_LOCATION: "test"}}
+            return Div(f"Hello World")
+        
+        @staticmethod
+        def build_response(content: Any) -> HTMLResponse:
+            return HTMLResponse(content=content, headers={HTMXHeaders.HX_LOCATION: "test"})
 
     client = TestClient(app.starlette)
     response = client.get("/TestComponent/1/test_target")
