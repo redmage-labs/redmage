@@ -63,7 +63,7 @@ class Redmage:
         async def route_function(request: Request) -> HTMLResponse:
             attrs = {**request.path_params, **request.query_params}
             instance = cls(**attrs)
-            return HTMLResponse(str(instance))
+            return instance.build_response(str(instance))
 
         return route_function
 
@@ -105,19 +105,10 @@ class Redmage:
                     **{**comp_params, **comp_query_params},
                 )
             if isinstance(components, tuple):
-                # if the last element in the tuple is a dict
-                # then it's an options dict which can contain headers
-                if isinstance(components[-1], dict):
-                    options = components[-1]
-                    headers = options.get("headers", {})
-                    components = components[:-1]
-                    return HTMLResponse(
-                        "\n".join([str(c) for c in components]), headers=headers
-                    )
-                return HTMLResponse("\n".join([str(c) for c in components]))
+                return instance.build_response("\n".join([str(c) for c in components]))
             elif components:
-                return HTMLResponse(str(components))
-            return HTMLResponse(str(instance))
+                return instance.build_response(str(components))
+            return instance.build_response(str(instance))
 
         return route_function
 

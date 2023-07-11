@@ -8,6 +8,7 @@ from typing import Tuple
 from uuid import uuid1
 
 from starlette.convertors import CONVERTOR_TYPES as starlette_convertors
+from starlette.responses import HTMLResponse
 
 from .utils import group_signature_param_by_kind
 
@@ -21,6 +22,10 @@ class Component(ABC):
     def __init_subclass__(cls, routes: Optional[Tuple[str]] = None, **kwargs: Any):
         super().__init_subclass__(**kwargs)
         cls.app.register_component(cls, routes=routes)
+
+    @staticmethod
+    def build_response(content: Any) -> HTMLResponse:
+        return HTMLResponse(content)
 
     @classmethod
     def set_app(cls, app: "Redmage") -> None:  # type: ignore

@@ -244,33 +244,6 @@ When the button is clicked an HTTP POST request is issued to our application. Th
 
 By default, if the target method returns **None** then **self** is rendered. We could also explicitly return self, another component, or a tuple of components (this can be useful in conjunction with out of bounds swaps).
 
-### Options
-
-A target method can also return a dictionary of options to alter the response. It supports the following keys:
-
-* headers (dict[str: str])
-
-```
-from redmage import Target
-
-
-class ClickComponent(Component):
-
-    def __init__(self):
-        self.count = 0
-
-    def render(self):
-        return Button(
-            self.count,
-            target=self.set_count(self.count + 1)
-        )
-
-    @Target.post
-    def set_count(self, count: int):
-        self.count = count
-        return self {"headers": {"HX-Location": "/changeup"}}
-```
-
 ### Target method arguments
 
 All of the arguments of a render method, except **self**, require type hints so that Redmage can build a route. Positional or keyword (and keyword only) arguments are added to the route as path arguments or query parameters respectively.
