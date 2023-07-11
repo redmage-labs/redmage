@@ -25,6 +25,20 @@ def test_redmage_create_app_with_debug():
     assert app.debug is True
 
 
+def test_redmage_create_app_with_middlware():
+    class MockMiddleware:
+        def __init__(self, app):
+            self.app = app
+
+        async def __call__(self, scope, receive, send):
+            await self.app(scope, receive, send)
+
+    middleware = [MockMiddleware]
+    app = Redmage(middleware=middleware)
+    starlette = app.starlette
+    assert starlette
+
+
 def test_component_constructor():
     class TestComponent(Component):
         def render(self):

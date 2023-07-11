@@ -1,11 +1,12 @@
 import logging
 from inspect import Parameter, getmembers, isfunction, signature
 from types import FunctionType
-from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
+from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
 
 from starlette.applications import Starlette
 from starlette.convertors import CONVERTOR_TYPES as starlette_convertors
 from starlette.datastructures import FormData, QueryParams
+from starlette.middleware import Middleware
 from starlette.requests import Request
 from starlette.responses import HTMLResponse
 from starlette.routing import Route
@@ -23,8 +24,11 @@ ComponentClass = Type[Component]
 
 
 class Redmage:
-    def __init__(self, debug: bool = False):
+    def __init__(
+        self, middleware: Optional[Sequence[Middleware]] = None, debug: bool = False
+    ):
         self.debug = debug
+        self.middleware = middleware
         self.routes: List[Route] = []
         self.components: List[Tuple[ComponentClass, Optional[Tuple[str]]]] = []
         # Could cause problems if multiple apps are created
@@ -34,6 +38,12 @@ class Redmage:
     def starlette(self) -> Starlette:
         if not hasattr(self, "_starlette"):
             self.create_routes()
+            if self.middleware:
+                self._starlette = Starlette(
+                    debug=self.debug,
+                    routes=self.routes,
+                    middleware=self.middleware,
+                )
             self._starlette = Starlette(debug=self.debug, routes=self.routes)
         return self._starlette
 
