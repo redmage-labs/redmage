@@ -13,6 +13,7 @@ class Element:
     def __init__(
         self,
         *content: Union[str, hype.Element],
+        # hx-* attributes
         swap: str = HTMXSwap.OUTER_HTML,
         target: Optional[Target] = None,
         trigger: Union[Trigger, Tuple[Trigger, ...]] = (),
@@ -21,6 +22,8 @@ class Element:
         boost: bool = False,
         push_url: Optional[str] = None,
         indicator: bool = False,
+        on: Optional[str] = None,
+        # helper target+trigger combos
         click: Optional[Target] = None,
         submit: Optional[Target] = None,
         change: Optional[Target] = None,
@@ -40,6 +43,7 @@ class Element:
         self.boost = boost
         self.push_url = push_url
         self.indicator = indicator
+        self.on = on
         self.kwargs = kwargs
         self.click = click
         self.submit = submit
@@ -107,6 +111,9 @@ class Element:
 
         if self.boost:
             el.attrs(hx_boost="true")
+
+        if self.on:
+            el.attrs(hx_on=self.on)
 
         return el
 
