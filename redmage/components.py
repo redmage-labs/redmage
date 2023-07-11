@@ -23,8 +23,7 @@ class Component(ABC):
         super().__init_subclass__(**kwargs)
         cls.app.register_component(cls, routes=routes)
 
-    @staticmethod
-    def build_response(content: Any) -> HTMLResponse:
+    def build_response(self, content: Any) -> HTMLResponse:
         return HTMLResponse(content)
 
     @classmethod
