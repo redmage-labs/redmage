@@ -1,10 +1,12 @@
 from typing import Optional, Tuple, Type, Union
 
-import hype
+import hype.asyncio as hype
 
+from . import Component
 from .targets import Target
 from .triggers import Trigger
 from .types import HTMXClass, HTMXSwap, HTMXTrigger
+from .utils import astr
 
 
 class Element:
@@ -12,7 +14,7 @@ class Element:
 
     def __init__(
         self,
-        *content: Union[str, hype.Element],
+        *content: Union[str, hype.Element, Component],
         # hx-* attributes
         swap: str = HTMXSwap.OUTER_HTML,
         target: Optional[Target] = None,
@@ -34,7 +36,21 @@ class Element:
         revealed: Optional[Target] = None,
         **kwargs: str,
     ):
-        self.content = list(content)
+        # use the render method if it's component
+        def _async_helper(foo):  # type: ignore
+            async def inner() -> str:
+                return await astr(foo)
+
+            return inner
+
+        self.content = list(
+            [
+                _async_helper(c)
+                if isinstance(c, Element) or isinstance(c, Component)
+                else c
+                for c in content
+            ]
+        )
         self.swap = swap
         self.target = target
         self.trigger = trigger
@@ -117,8 +133,8 @@ class Element:
 
         return el
 
-    def __str__(self) -> str:
-        return str(self.render())
+    async def _astr_(self) -> str:
+        return await self.render().render()
 
 
 class Doc:
@@ -128,477 +144,478 @@ class Doc:
     def attrs(self, **kwargs: str) -> None:
         self.el.attrs(**kwargs)
 
-    def __str__(self) -> str:
-        return str(hype.Doc(str(self.el)))
+    async def _astr_(self) -> str:
+        doc = await hype.Doc(await astr(self.el)).render()
+        return str(doc)
 
 
 class A(Element):
-    el = hype.element.A
+    el = hype.A
 
 
 class Abbr(Element):
-    el = hype.element.Abbr
+    el = hype.Abbr
 
 
 class Address(Element):
-    el = hype.element.Address
+    el = hype.Address
 
 
 class Area(Element):
-    el = hype.element.Area
+    el = hype.Area
 
 
 class Article(Element):
-    el = hype.element.Article
+    el = hype.Article
 
 
 class Aside(Element):
-    el = hype.element.Aside
+    el = hype.Aside
 
 
 class Audio(Element):
-    el = hype.element.Audio
+    el = hype.Audio
 
 
 class B(Element):
-    el = hype.element.B
+    el = hype.B
 
 
 class Base(Element):
-    el = hype.element.Base
+    el = hype.Base
 
 
 class Bdi(Element):
-    el = hype.element.Bdi
+    el = hype.Bdi
 
 
 class Bdo(Element):
-    el = hype.element.Bdo
+    el = hype.Bdo
 
 
 class Blockquote(Element):
-    el = hype.element.Blockquote
+    el = hype.Blockquote
 
 
 class Body(Element):
-    el = hype.element.Body
+    el = hype.Body
 
 
 class Br(Element):
-    el = hype.element.Br
+    el = hype.Br
 
 
 class Button(Element):
-    el = hype.element.Button
+    el = hype.Button
 
 
 class Canvas(Element):
-    el = hype.element.Canvas
+    el = hype.Canvas
 
 
 class Caption(Element):
-    el = hype.element.Caption
+    el = hype.Caption
 
 
 class Cite(Element):
-    el = hype.element.Cite
+    el = hype.Cite
 
 
 class Code(Element):
-    el = hype.element.Code
+    el = hype.Code
 
 
 class Col(Element):
-    el = hype.element.Col
+    el = hype.Col
 
 
 class Colgroup(Element):
-    el = hype.element.Colgroup
+    el = hype.Colgroup
 
 
 class Data(Element):
-    el = hype.element.Data
+    el = hype.Data
 
 
 class Datalist(Element):
-    el = hype.element.Datalist
+    el = hype.Datalist
 
 
 class Dd(Element):
-    el = hype.element.Dd
+    el = hype.Dd
 
 
 class Del(Element):
-    el = hype.element.Del
+    el = hype.Del
 
 
 class Details(Element):
-    el = hype.element.Details
+    el = hype.Details
 
 
 class Dfn(Element):
-    el = hype.element.Dfn
+    el = hype.Dfn
 
 
 class Dialog(Element):
-    el = hype.element.Dialog
+    el = hype.Dialog
 
 
 class Div(Element):
-    el = hype.element.Div
+    el = hype.Div
 
 
 class Dl(Element):
-    el = hype.element.Dl
+    el = hype.Dl
 
 
 class Dt(Element):
-    el = hype.element.Dt
+    el = hype.Dt
 
 
 class Em(Element):
-    el = hype.element.Em
+    el = hype.Em
 
 
 class Embed(Element):
-    el = hype.element.Embed
+    el = hype.Embed
 
 
 class Fieldset(Element):
-    el = hype.element.Fieldset
+    el = hype.Fieldset
 
 
 class Figcaption(Element):
-    el = hype.element.Figcaption
+    el = hype.Figcaption
 
 
 class Figure(Element):
-    el = hype.element.Figure
+    el = hype.Figure
 
 
 class Footer(Element):
-    el = hype.element.Footer
+    el = hype.Footer
 
 
 class Form(Element):
-    el = hype.element.Form
+    el = hype.Form
 
 
 class H1(Element):
-    el = hype.element.H1
+    el = hype.H1
 
 
 class H2(Element):
-    el = hype.element.H2
+    el = hype.H2
 
 
 class H3(Element):
-    el = hype.element.H3
+    el = hype.H3
 
 
 class H4(Element):
-    el = hype.element.H4
+    el = hype.H4
 
 
 class H5(Element):
-    el = hype.element.H5
+    el = hype.H5
 
 
 class H6(Element):
-    el = hype.element.H6
+    el = hype.H6
 
 
 class Head(Element):
-    el = hype.element.Head
+    el = hype.Head
 
 
 class Header(Element):
-    el = hype.element.Header
+    el = hype.Header
 
 
 class Hgroup(Element):
-    el = hype.element.Hgroup
+    el = hype.Hgroup
 
 
 class Hr(Element):
-    el = hype.element.Hr
+    el = hype.Hr
 
 
 class Html(Element):
-    el = hype.element.Html
+    el = hype.Html
 
 
 class I(Element):
-    el = hype.element.I
+    el = hype.I
 
 
 class Iframe(Element):
-    el = hype.element.Iframe
+    el = hype.Iframe
 
 
 class Img(Element):
-    el = hype.element.Img
+    el = hype.Img
 
 
 class Input(Element):
-    el = hype.element.Input
+    el = hype.Input
 
 
 class Ins(Element):
-    el = hype.element.Ins
+    el = hype.Ins
 
 
 class Kbd(Element):
-    el = hype.element.Kbd
+    el = hype.Kbd
 
 
 class Label(Element):
-    el = hype.element.Label
+    el = hype.Label
 
 
 class Legend(Element):
-    el = hype.element.Legend
+    el = hype.Legend
 
 
 class Li(Element):
-    el = hype.element.Li
+    el = hype.Li
 
 
 class Link(Element):
-    el = hype.element.Link
+    el = hype.Link
 
 
 class Main(Element):
-    el = hype.element.Main
+    el = hype.Main
 
 
 class Map(Element):
-    el = hype.element.Map
+    el = hype.Map
 
 
 class Mark(Element):
-    el = hype.element.Mark
+    el = hype.Mark
 
 
 class Math(Element):
-    el = hype.element.Math
+    el = hype.Math
 
 
 class Menu(Element):
-    el = hype.element.Menu
+    el = hype.Menu
 
 
 class Menuitem(Element):
-    el = hype.element.Menuitem
+    el = hype.Menuitem
 
 
 class Meta(Element):
-    el = hype.element.Meta
+    el = hype.Meta
 
 
 class Meter(Element):
-    el = hype.element.Meter
+    el = hype.Meter
 
 
 class Nav(Element):
-    el = hype.element.Nav
+    el = hype.Nav
 
 
 class Noscript(Element):
-    el = hype.element.Noscript
+    el = hype.Noscript
 
 
 class Object(Element):
-    el = hype.element.Object
+    el = hype.Object
 
 
 class Ol(Element):
-    el = hype.element.Ol
+    el = hype.Ol
 
 
 class Optgroup(Element):
-    el = hype.element.Optgroup
+    el = hype.Optgroup
 
 
 class Option(Element):
-    el = hype.element.Option
+    el = hype.Option
 
 
 class Output(Element):
-    el = hype.element.Output
+    el = hype.Output
 
 
 class P(Element):
-    el = hype.element.P
+    el = hype.P
 
 
 class Param(Element):
-    el = hype.element.Param
+    el = hype.Param
 
 
 class Picture(Element):
-    el = hype.element.Picture
+    el = hype.Picture
 
 
 class Pre(Element):
-    el = hype.element.Pre
+    el = hype.Pre
 
 
 class Progress(Element):
-    el = hype.element.Progress
+    el = hype.Progress
 
 
 class Q(Element):
-    el = hype.element.Q
+    el = hype.Q
 
 
 class Rb(Element):
-    el = hype.element.Rb
+    el = hype.Rb
 
 
 class Rp(Element):
-    el = hype.element.Rp
+    el = hype.Rp
 
 
 class Rt(Element):
-    el = hype.element.Rt
+    el = hype.Rt
 
 
 class Rtc(Element):
-    el = hype.element.Rtc
+    el = hype.Rtc
 
 
 class Ruby(Element):
-    el = hype.element.Ruby
+    el = hype.Ruby
 
 
 class S(Element):
-    el = hype.element.S
+    el = hype.S
 
 
 class Samp(Element):
-    el = hype.element.Samp
+    el = hype.Samp
 
 
 class Script(Element):
-    el = hype.element.Script
+    el = hype.Script
 
 
 class Section(Element):
-    el = hype.element.Section
+    el = hype.Section
 
 
 class Select(Element):
-    el = hype.element.Select
+    el = hype.Select
 
 
 class SelfClosingElement(Element):
-    el = hype.element.SelfClosingElement
+    el = hype.SelfClosingElement
 
 
 class Slot(Element):
-    el = hype.element.Slot
+    el = hype.Slot
 
 
 class Small(Element):
-    el = hype.element.Small
+    el = hype.Small
 
 
 class Source(Element):
-    el = hype.element.Source
+    el = hype.Source
 
 
 class Span(Element):
-    el = hype.element.Span
+    el = hype.Span
 
 
 class Strong(Element):
-    el = hype.element.Strong
+    el = hype.Strong
 
 
 class Style(Element):
-    el = hype.element.Style
+    el = hype.Style
 
 
 class Sub(Element):
-    el = hype.element.Sub
+    el = hype.Sub
 
 
 class Summary(Element):
-    el = hype.element.Summary
+    el = hype.Summary
 
 
 class Sup(Element):
-    el = hype.element.Sup
+    el = hype.Sup
 
 
 class Svg(Element):
-    el = hype.element.Svg
+    el = hype.Svg
 
 
 class Table(Element):
-    el = hype.element.Table
+    el = hype.Table
 
 
 class Tbody(Element):
-    el = hype.element.Tbody
+    el = hype.Tbody
 
 
 class Td(Element):
-    el = hype.element.Td
+    el = hype.Td
 
 
 class Template(Element):
-    el = hype.element.Template
+    el = hype.Template
 
 
 class Textarea(Element):
-    el = hype.element.Textarea
+    el = hype.Textarea
 
 
 class Tfoot(Element):
-    el = hype.element.Tfoot
+    el = hype.Tfoot
 
 
 class Th(Element):
-    el = hype.element.Th
+    el = hype.Th
 
 
 class Thead(Element):
-    el = hype.element.Thead
+    el = hype.Thead
 
 
 class Time(Element):
-    el = hype.element.Time
+    el = hype.Time
 
 
 class Title(Element):
-    el = hype.element.Title
+    el = hype.Title
 
 
 class Tr(Element):
-    el = hype.element.Tr
+    el = hype.Tr
 
 
 class Track(Element):
-    el = hype.element.Track
+    el = hype.Track
 
 
 class U(Element):
-    el = hype.element.U
+    el = hype.U
 
 
 class Ul(Element):
-    el = hype.element.Ul
+    el = hype.Ul
 
 
 class Var(Element):
-    el = hype.element.Var
+    el = hype.Var
 
 
 class Video(Element):
-    el = hype.element.Video
+    el = hype.Video
 
 
 class Wbr(Element):
-    el = hype.element.Wbr
+    el = hype.Wbr

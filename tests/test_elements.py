@@ -1,11 +1,14 @@
+import pytest
+
 from redmage import Component, Redmage, Target
 from redmage.elements import Div, Doc
+from redmage.utils import astr
 
 app = Redmage()
 
 
 class TestComponent(Component):
-    def render(self):
+    async def render(self):
         return Div(f"Hello World")
 
     @property
@@ -23,61 +26,72 @@ app.create_routes()
 test_component = TestComponent()
 
 
-def test_element():
-    div = Div("test")
-    assert str(div).strip() == "<div>test</div>"
+@pytest.mark.asyncio
+async def test_element():
+    div = await astr(Div("test"))
+    assert div.strip() == "<div>test</div>"
 
 
-def test_element_helper_keyword():
-    div = Div("test", click=test_component.target_method())
+@pytest.mark.asyncio
+async def test_element_helper_keyword():
+    div = await astr(Div("test", click=test_component.target_method()))
     assert (
-        str(div).strip()
+        div.strip()
         == '<div hx-swap="outerHTML" hx-target="#TestComponent-1" hx-get="/TestComponent/1/target_method" hx-trigger="click">test</div>'
     )
 
 
-def test_element_append():
+@pytest.mark.asyncio
+async def test_element_append():
     div = Div()
     div.append("test")
-    assert str(div).strip() == "<div>test</div>"
+    assert (await astr(div)).strip() == "<div>test</div>"
 
 
-def test_element_push_url():
-    div = Div("test", push_url="/test")
-    assert str(div).strip() == '<div hx-push-url="/test">test</div>'
+@pytest.mark.asyncio
+async def test_element_push_url():
+    div = await astr(Div("test", push_url="/test"))
+    assert div.strip() == '<div hx-push-url="/test">test</div>'
 
 
-def test_element_multiple_triggers():
-    div = Div("test", trigger=("click", "mouseover"))
-    assert str(div).strip() == '<div hx-trigger="click, mouseover">test</div>'
+@pytest.mark.asyncio
+async def test_element_multiple_triggers():
+    div = await astr(Div("test", trigger=("click", "mouseover")))
+    assert div.strip() == '<div hx-trigger="click, mouseover">test</div>'
 
 
-def test_element_swap_oob():
-    div = Div("test", swap_oob=True)
-    assert str(div).strip() == '<div hx-swap-oob="true">test</div>'
+@pytest.mark.asyncio
+async def test_element_swap_oob():
+    div = await astr(Div("test", swap_oob=True))
+    assert div.strip() == '<div hx-swap-oob="true">test</div>'
 
 
-def test_element_confirm():
-    div = Div("test", confirm="Are you sure?")
-    assert str(div).strip() == '<div hx-confirm="Are you sure?">test</div>'
+@pytest.mark.asyncio
+async def test_element_confirm():
+    div = await astr(Div("test", confirm="Are you sure?"))
+    assert div.strip() == '<div hx-confirm="Are you sure?">test</div>'
 
 
-def test_element_boost():
-    div = Div("test", boost=True)
-    assert str(div).strip() == '<div hx-boost="true">test</div>'
+@pytest.mark.asyncio
+async def test_element_boost():
+    div = await astr(Div("test", boost=True))
+    assert div.strip() == '<div hx-boost="true">test</div>'
 
 
-def test_element_on():
-    div = Div("test", on="click")
-    assert str(div).strip() == '<div hx-on="click">test</div>'
+@pytest.mark.asyncio
+async def test_element_on():
+    div = await astr(Div("test", on="click"))
+    assert div.strip() == '<div hx-on="click">test</div>'
 
 
-def test_doc():
-    doc = Doc(Div("test"))
-    assert str(doc).strip() == "<!DOCTYPE html>\n<div>test</div>"
+@pytest.mark.asyncio
+async def test_doc():
+    doc = await astr(Doc(Div("test")))
+    assert doc.strip() == "<!DOCTYPE html>\n<div>test</div>"
 
 
-def test_doc_attrs():
+@pytest.mark.asyncio
+async def test_doc_attrs():
     doc = Doc(Div("test"))
     doc.attrs(test="test")
-    assert str(doc).strip() == '<!DOCTYPE html>\n<div test="test">test</div>'
+    assert (await astr(doc)).strip() == '<!DOCTYPE html>\n<div test="test">test</div>'

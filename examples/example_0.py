@@ -12,7 +12,7 @@ class Counter(Component, routes=("/",)):
     def __init__(self):
         self.count = 0
 
-    def render(self):
+    async def render(self):
         return Div(
             H1(f"Clicked {self.count} times."),
             Button(

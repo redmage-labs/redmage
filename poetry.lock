@@ -252,14 +252,14 @@ socks = ["socksio (>=1.0.0,<2.0.0)"]
 
 [[package]]
 name = "hype-html"
-version = "1.1.3"
+version = "2.0.1"
 description = "A minimal python dsl for generating html."
 category = "main"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.7,<4.0"
 files = [
-    {file = "hype-html-1.1.3.tar.gz", hash = "sha256:e40e23f838d487af038e809fc334113114b49b2b8f1768db1f2f138a4b1557fc"},
-    {file = "hype_html-1.1.3-py3-none-any.whl", hash = "sha256:7f75e6f73353b1503fb3621924c6253a7152f3afc7f6133fba39637c3490aade"},
+    {file = "hype_html-2.0.1-py3-none-any.whl", hash = "sha256:750ae4d74db29af1ad33500e017dd9f824de51f684e59aaf414e938e2e58b996"},
+    {file = "hype_html-2.0.1.tar.gz", hash = "sha256:1be26f699d72ca293db4004f7a90b2821a486a0a57bc43f056394a1f473eca8a"},
 ]
 
 [[package]]
@@ -533,6 +533,25 @@ tomli = {version = ">=1.0.0", markers = "python_version < \"3.11\""}
 testing = ["argcomplete", "attrs (>=19.2.0)", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "xmlschema"]
 
 [[package]]
+name = "pytest-asyncio"
+version = "0.21.1"
+description = "Pytest support for asyncio"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "pytest-asyncio-0.21.1.tar.gz", hash = "sha256:40a7eae6dded22c7b604986855ea48400ab15b069ae38116e8c01238e9eeb64d"},
+    {file = "pytest_asyncio-0.21.1-py3-none-any.whl", hash = "sha256:8666c1c8ac02631d7c51ba282e0c69a8a452b211ffedf2599099845da5c5c37b"},
+]
+
+[package.dependencies]
+pytest = ">=7.0.0"
+
+[package.extras]
+docs = ["sphinx (>=5.3)", "sphinx-rtd-theme (>=1.0)"]
+testing = ["coverage (>=6.2)", "flaky (>=3.5.0)", "hypothesis (>=5.7.1)", "mypy (>=0.931)", "pytest-trio (>=0.7.0)"]
+
+[[package]]
 name = "pytest-cov"
 version = "4.0.0"
 description = "Pytest plugin for measuring coverage."
@@ -643,4 +662,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "70a598bc1d67ba2ce17219a68a66860f62b8485577f3ce4b72c812382e7714f2"
+content-hash = "37dbd4b3678cd52de9f985e50ff88b312ed9c6c6f0c3af169f4610625058c4f2"

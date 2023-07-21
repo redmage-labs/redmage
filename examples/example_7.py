@@ -9,7 +9,7 @@ app = Redmage()
 
 
 class Index(Component, routes=("/",)):
-    def render(self):
+    async def render(self):
         return Doc(
             Html(
                 Head(
@@ -27,7 +27,7 @@ class HoverCount(Component):
     def __init__(self):
         self.count = 0
 
-    def render(self):
+    async def render(self):
         trigger = Trigger(HTMXTrigger.MOUSEOVER, DelayTriggerModifier(1000))
 
         return Div(self.count, target=self.set_count(self.count + 1), trigger=trigger)

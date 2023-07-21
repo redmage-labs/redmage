@@ -22,8 +22,8 @@ game = TicTacToeGameState()
 
 
 class Index(Component, routes=("/",)):
-    def render(self):
-        return Html(
+    async def render(self):
+        r = Html(
             Head(
                 Link(
                     rel="stylesheet",
@@ -35,6 +35,8 @@ class Index(Component, routes=("/",)):
                 Script(src="https://unpkg.com/htmx.org@1.9.2"),
             ),
         )
+        print(await r._astr_())
+        return r
 
 
 class Board(Component):
@@ -42,7 +44,7 @@ class Board(Component):
         self.game_over = False
         self.draw = False
 
-    def render(self):
+    async def render(self):
         squares = []
         for i, row in enumerate(game.board_state):
             for j, cell in enumerate(row):

@@ -16,6 +16,7 @@ from redmage.exceptions import RedmageError
 from .components import Component
 from .targets import Target
 from .types import HTTPMethod
+from .utils import astr
 
 logger = logging.getLogger("redmage")
 
@@ -63,7 +64,7 @@ class Redmage:
         async def route_function(request: Request) -> HTMLResponse:
             attrs = {**request.path_params, **request.query_params}
             instance = cls(**attrs)
-            return instance.build_response(str(instance))
+            return instance.build_response(await astr(instance))
 
         return route_function
 
@@ -105,10 +106,12 @@ class Redmage:
                     **{**comp_params, **comp_query_params},
                 )
             if isinstance(components, tuple):
-                return instance.build_response("\n".join([str(c) for c in components]))
+                return instance.build_response(
+                    "\n".join([await astr(c) for c in components])
+                )
             elif components:
-                return instance.build_response(str(components))
-            return instance.build_response(str(instance))
+                return instance.build_response(await astr(components))
+            return instance.build_response(await astr(instance))
 
         return route_function
 
