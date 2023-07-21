@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "redmage"
-version = "0.4.0"
+version = "0.4.1"
 description = "A component based library for building htmx powered applications."
 authors = ["Scott Russell <me@scottrussell.net>"]
 license = "MIT"
@@ -9,7 +9,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.8"
 starlette = "^0.26.1"
-hype-html = "^2.0.1"
+hype-html = "^2.0.2"
 python-multipart = "^0.0.6"
 
 [tool.poetry.group.dev.dependencies]

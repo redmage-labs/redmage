@@ -252,14 +252,14 @@ socks = ["socksio (>=1.0.0,<2.0.0)"]
 
 [[package]]
 name = "hype-html"
-version = "2.0.1"
+version = "2.0.2"
 description = "A minimal python dsl for generating html."
 category = "main"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "hype_html-2.0.1-py3-none-any.whl", hash = "sha256:750ae4d74db29af1ad33500e017dd9f824de51f684e59aaf414e938e2e58b996"},
-    {file = "hype_html-2.0.1.tar.gz", hash = "sha256:1be26f699d72ca293db4004f7a90b2821a486a0a57bc43f056394a1f473eca8a"},
+    {file = "hype_html-2.0.2-py3-none-any.whl", hash = "sha256:b097e1f176d1e662228efadaf00dcb3d16b2acb4c616e5c728e4e7dd860513b7"},
+    {file = "hype_html-2.0.2.tar.gz", hash = "sha256:aae789c6cd04a333f86dd966dba9c3daeedd62e9107bfc8b04056ee8de6d67e6"},
 ]
 
 [[package]]
@@ -662,4 +662,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "37dbd4b3678cd52de9f985e50ff88b312ed9c6c6f0c3af169f4610625058c4f2"
+content-hash = "dc2056e704a5fcd92e5b098f6b95ea3d54d811c9e1d676a56cc11451376a6a17"
