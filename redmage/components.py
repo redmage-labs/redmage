@@ -18,7 +18,7 @@ logger = logging.getLogger("redmage")
 
 class Component(ABC):
     app: "Redmage"  # type: ignore
-    request: Optional[Request] = None
+    request = None  # type: ignore
     render_extensions: Dict[str, Any] = {}
 
     def __init_subclass__(cls, routes: Optional[Tuple[str]] = None, **kwargs: Any):
