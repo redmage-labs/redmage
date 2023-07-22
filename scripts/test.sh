@@ -12,7 +12,7 @@ if [ $retVal -ne 0 ]; then
     exit $retVal
 fi
 
-python -m mypy redmage/ --exclude env/
+python -m mypy redmage/ --exclude env/ --disallow-untyped-defs
 retVal=$?
 if [ $retVal -ne 0 ]; then
     echo "Python Type Checking Error"
