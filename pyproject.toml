@@ -9,7 +9,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.8"
 starlette = "^0.26.1"
-hype-html = "^2.0.2"
+hype-html = "^2.0.3"
 python-multipart = "^0.0.6"
 
 [tool.poetry.group.dev.dependencies]
