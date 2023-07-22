@@ -64,7 +64,7 @@ class TodoAppComponent(
         self.route = route
         self.router_component = TodoRouterComponent(self.route, self.todo_id)
 
-    def render(self):
+    async def render(self):
         return Doc(
             Html(
                 Head(
@@ -102,7 +102,7 @@ class TodoRouterComponent(Component):
 
         return route_comp
 
-    def render(self):
+    async def render(self):
         return Div(
             TodoHeaderComponent(),
             self.get_route(self.route, self.todo_id),
@@ -117,7 +117,7 @@ class TodoRouterComponent(Component):
 
 
 class TodoHeaderComponent(Component):
-    def render(self, router):
+    async def render(self, router):
         return Nav(
             Ul(
                 Li(Strong("Todo App")),
@@ -144,7 +144,7 @@ class TodoHeaderComponent(Component):
 
 
 class TodoListComponent(Component):
-    def render(self, router):
+    async def render(self, router):
         return Ul(
             *[
                 Li(
@@ -188,7 +188,7 @@ class TodoListComponent(Component):
 
 
 class TodoAddComponent(Component):
-    def render(self):
+    async def render(self):
         return Form(
             Textarea(type="text", name="message", rows=5),
             Button("Add", type="submit", click=self.add_todo(), push_url="/"),
@@ -210,7 +210,7 @@ class TodoEditComponent(Component):
             self._todo = db.get_todo(self.todo_id)
         return self._todo
 
-    def render(self):
+    async def render(self):
         return Form(
             Textarea(self.todo.message, type="text", name="message", rows=5),
             Button(

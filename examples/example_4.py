@@ -21,7 +21,7 @@ app = Redmage()
 
 
 class Index(Component, routes=("/",)):
-    def render(self):
+    async def render(self):
         return Doc(
             Html(
                 Head(
@@ -44,7 +44,7 @@ class Message(Component):
     def __init__(self, content):
         self.content = content
 
-    def render(self):
+    async def render(self):
         return Div(
             P(f"{self.content=}"),
             Form(

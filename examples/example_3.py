@@ -7,7 +7,7 @@ app = Redmage()
 
 
 class Index(Component, routes=("/",)):
-    def render(self):
+    async def render(self):
         return Doc(
             Html(
                 Head(Title("Redmage | Example 3")),

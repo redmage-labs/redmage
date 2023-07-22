@@ -10,7 +10,7 @@ from uuid import uuid1
 from starlette.convertors import CONVERTOR_TYPES as starlette_convertors
 from starlette.responses import HTMLResponse
 
-from .utils import group_signature_param_by_kind
+from .utils import astr, group_signature_param_by_kind
 
 logger = logging.getLogger("redmage")
 
@@ -157,7 +157,7 @@ class Component(ABC):
         return self._id
 
     @abstractmethod
-    def render(self, **exts: Any) -> "Element":  # type: ignore
+    async def render(self, **exts: Any) -> "Element":  # type: ignore
         ...  # pragma: no cover
 
     def _filter_render_extensions(self) -> OrderedDictType[str, Any]:
@@ -173,8 +173,8 @@ class Component(ABC):
     def set_element_id(self, el: "Element") -> None:  # type: ignore
         el.attrs(_id=self.id)
 
-    def __str__(self) -> str:
+    async def _astr_(self) -> str:
         render_extentions = self._filter_render_extensions()
-        el = self.render(**render_extentions)
+        el = await self.render(**render_extentions)
         self.set_element_id(el)
-        return str(el)
+        return await astr(el)

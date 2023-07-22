@@ -1,6 +1,6 @@
 import inspect
 from inspect import Parameter, _ParameterKind
-from typing import Dict, List
+from typing import Any, Dict, List
 
 
 def group_signature_param_by_kind(
@@ -16,3 +16,7 @@ def group_signature_param_by_kind(
     for param in sig.parameters.values():
         grouped[param.kind].append(param)
     return grouped
+
+
+async def astr(astringable: Any) -> str:
+    return await astringable._astr_()

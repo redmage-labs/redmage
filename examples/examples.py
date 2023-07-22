@@ -28,7 +28,7 @@ app = Redmage()
 
 
 class Index(Component, routes=("/",)):
-    def render(self):
+    async def render(self):
         return Html(
             Body(
                 Examples(),
@@ -38,7 +38,7 @@ class Index(Component, routes=("/",)):
 
 
 class Examples(Component):
-    def render(self):
+    async def render(self):
         list_component = ListComponent()
 
         return Div(
@@ -84,7 +84,7 @@ class Counter(Component):
     def __init__(self, n: int = 0):
         self.n = n
 
-    def render(self):
+    async def render(self):
         return Div(
             P(f"count={self.n}"),
             Button("Add 1", target=self.iterate(self.n + 1)),
@@ -105,7 +105,7 @@ class Message(Component):
     class UpdateMessageForm:
         content: str
 
-    def render(self):
+    async def render(self):
         return Div(
             P(f"{self.content=}" if self.content else "No message has been posted"),
             Form(
@@ -126,7 +126,7 @@ class Message(Component):
 
 @dataclass
 class ListComponent(Component):
-    def render(self):
+    async def render(self):
         items = []
         return Ul(*[ListItemComponent(i) for i in items])
 
@@ -140,7 +140,7 @@ class ListComponent(Component):
 class ListItemComponent(Component):
     message: str
 
-    def render(self):
+    async def render(self):
         return Li(self.message)
 
 
@@ -149,7 +149,7 @@ class MouseOverTriggerExample(Component):
     message: str = "Hover over the button to trigger the event"
     delay: int = 0
 
-    def render(self):
+    async def render(self):
         if self.delay:
             trigger = Trigger(
                 HTMXTrigger.MOUSEOVER, DelayTriggerModifier(milliseconds=self.delay)
@@ -176,7 +176,7 @@ class MouseOverTriggerExample(Component):
 class Confirm(Component):
     message: str = "Click the button to trigger the event"
 
-    def render(self):
+    async def render(self):
         return Div(
             P(self.message),
             Button(
@@ -201,7 +201,7 @@ class ActiveSearch(Component):
     def __init__(self):
         self.search_string = ""
 
-    def render(self):
+    async def render(self):
         poeple = [
             ("John", 20),
             ("Jane", 21),

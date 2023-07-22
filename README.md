@@ -26,7 +26,7 @@ class Counter(Component, routes=("/",)):
     def __init__(self):
         self.count = 0
 
-    def render(self):
+    async def render(self):
         return Div(
             H1(f"Clicked {self.count} times."),
             Button(
@@ -94,7 +94,7 @@ app = Redmage()
 
 class Index(Component, routes=("/",)):
 
-    def render(self):
+    async def render(self):
         return Doc(
             Html(
                 Head(
@@ -180,7 +180,7 @@ app = Redmage()
 
 class Index(Component, routes=("/",)):
 
-    def render(self):
+    async def render(self):
         return Doc(
             Html(
                 Head(
@@ -196,7 +196,7 @@ class Index(Component, routes=("/",)):
 
 class ChildComponent(Component):
 
-    def render(self):
+    async def render(self):
         return H1("Child Component")
 
 ```
@@ -229,7 +229,7 @@ class ClickComponent(Component):
     def __init__(self):
         self.count = 0
 
-    def render(self):
+    async def render(self):
         return Button(
             self.count,
             target=self.set_count(self.count + 1)
@@ -261,7 +261,7 @@ class Message(Component):
     def __init__(self, content):
         self.content = content
 
-    def render(self):
+    async def render(self):
         return Div(
             P(f"{self.content=}"),
             Form(
@@ -304,7 +304,7 @@ class MessageAndCounter(Component):
         self.content = content
         self.count = count
 
-    def render(self):
+    async def render(self):
         return Div(
             P(f"{self.content=}"),
             Form(
@@ -342,7 +342,7 @@ class HoverCount(Component):
     def __init__(self):
         self.count = 0
 
-    def render(self):
+    async def render(self):
         return Div(
             self.count,
             target=self.set_count(self.count + 1),
@@ -376,7 +376,7 @@ class HoverCount(Component):
     def __init__(self):
         self.count = 0
 
-    def render(self):
+    async def render(self):
         trigger = Trigger(HTMXTrigger.MOUSEOVER, DelayTriggerModifier(1000))
 
         return Div(
@@ -399,7 +399,7 @@ class HoverCount(Component):
     def __init__(self):
         self.count = 0
 
-    def render(self):
+    async def render(self):
         return Div(
             self.count,
             mouse_over=self.set_count(self.count + 1),
