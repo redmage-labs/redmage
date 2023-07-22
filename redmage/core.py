@@ -64,6 +64,7 @@ class Redmage:
         async def route_function(request: Request) -> HTMLResponse:
             attrs = {**request.path_params, **request.query_params}
             instance = cls(**attrs)
+            instance.request = request
             return instance.build_response(await astr(instance))
 
         return route_function
