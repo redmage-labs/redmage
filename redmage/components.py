@@ -8,6 +8,7 @@ from typing import Tuple
 from uuid import uuid1
 
 from starlette.convertors import CONVERTOR_TYPES as starlette_convertors
+from starlette.requests import Request
 from starlette.responses import HTMLResponse
 
 from .utils import astr, group_signature_param_by_kind
@@ -17,14 +18,12 @@ logger = logging.getLogger("redmage")
 
 class Component(ABC):
     app: "Redmage"  # type: ignore
+    request = None  # type: ignore
     render_extensions: Dict[str, Any] = {}
 
     def __init_subclass__(cls, routes: Optional[Tuple[str]] = None, **kwargs: Any):
         super().__init_subclass__(**kwargs)
         cls.app.register_component(cls, routes=routes)
-
-    def build_response(self, content: Any) -> HTMLResponse:
-        return HTMLResponse(content)
 
     @classmethod
     def set_app(cls, app: "Redmage") -> None:  # type: ignore
@@ -172,6 +171,9 @@ class Component(ABC):
 
     def set_element_id(self, el: "Element") -> None:  # type: ignore
         el.attrs(_id=self.id)
+
+    def build_response(self, content: Any) -> HTMLResponse:
+        return HTMLResponse(content)
 
     async def _astr_(self) -> str:
         render_extentions = self._filter_render_extensions()
