@@ -498,7 +498,7 @@ testing = ["pytest", "pytest-benchmark"]
 name = "pycodestyle"
 version = "2.11.1"
 description = "Python style guide checker"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.8"
 files = [
@@ -659,4 +659,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "150fe67c71d7b0640e5f5a5088017bc45c2287c3f6c79efef463559f4c32e9f4"
+content-hash = "bff89a4f803cb22445fc4732d20f036baef0bda17d1824046dbad37dbc41d656"
