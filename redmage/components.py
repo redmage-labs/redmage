@@ -2,7 +2,7 @@ import logging
 from abc import ABC, abstractmethod
 from collections import OrderedDict
 from inspect import Parameter, signature
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 from typing import OrderedDict as OrderedDictType
 from typing import Tuple, Type
 from uuid import uuid1
@@ -12,19 +12,14 @@ from starlette.responses import HTMLResponse
 
 from .utils import astr, group_signature_param_by_kind
 
-if TYPE_CHECKING:
-    from starlette.requests import Request  # pragma: no cover
-
-    from redmage import Redmage  # pragma: no cover
-
 logger = logging.getLogger("redmage")
 
 
 class Component(ABC):
-    app: Optional["Redmage"]
-    request: Optional["Request"] = None
+    app: "Redmage"  # type: ignore
+    request = None  # type: ignore
+    components = []  # type: ignore
     render_extensions: Dict[str, Any] = {}
-    components: List[Tuple[Type["Component"], Optional[Tuple[str]]]] = []
 
     def __init_subclass__(cls, routes: Optional[Tuple[str]] = None, **kwargs: Any):
         super().__init_subclass__(**kwargs)
@@ -55,7 +50,14 @@ class Component(ABC):
 
             for field, field_type in annotations.items():
                 convertor = starlette_convertors[
-                    field_type if isinstance(field_type, str) else field_type.__name__
+                    (
+                        field_type
+                        if (
+                            isinstance(field_type, str)
+                            or not hasattr(field_type, "__name__")
+                        )
+                        else field_type.__name__
+                    )
                 ]
                 value = (
                     convertor.to_string(getattr(instance, field, None))
