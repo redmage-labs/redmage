@@ -16,8 +16,7 @@ class TestComponent(Component):
         return f"{self.__class__.__name__}-1"
 
     @Target.get
-    def target_method(self):
-        ...
+    def target_method(self): ...
 
 
 app.create_routes()

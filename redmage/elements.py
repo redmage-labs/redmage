@@ -40,9 +40,11 @@ class Element:
 
         self.content = list(
             [
-                self._async_helper(c)
-                if isinstance(c, Element) or isinstance(c, Component)
-                else c
+                (
+                    self._async_helper(c)
+                    if isinstance(c, Element) or isinstance(c, Component)
+                    else c
+                )
                 for c in content
             ]
         )
