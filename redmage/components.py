@@ -2,28 +2,33 @@ import logging
 from abc import ABC, abstractmethod
 from collections import OrderedDict
 from inspect import Parameter, signature
-from typing import Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 from typing import OrderedDict as OrderedDictType
-from typing import Tuple
+from typing import Tuple, Type
 from uuid import uuid1
 
 from starlette.convertors import CONVERTOR_TYPES as starlette_convertors
-from starlette.requests import Request
 from starlette.responses import HTMLResponse
 
 from .utils import astr, group_signature_param_by_kind
+
+if TYPE_CHECKING:
+    from starlette.requests import Request  # pragma: no cover
+
+    from redmage import Redmage  # pragma: no cover
 
 logger = logging.getLogger("redmage")
 
 
 class Component(ABC):
-    app: "Redmage"  # type: ignore
-    request = None  # type: ignore
+    app: Optional["Redmage"]
+    request: Optional["Request"] = None
     render_extensions: Dict[str, Any] = {}
+    components: List[Tuple[Type["Component"], Optional[Tuple[str]]]] = []
 
     def __init_subclass__(cls, routes: Optional[Tuple[str]] = None, **kwargs: Any):
         super().__init_subclass__(**kwargs)
-        cls.app.register_component(cls, routes=routes)
+        Component.components.append((cls, routes))
 
     @classmethod
     def set_app(cls, app: "Redmage") -> None:  # type: ignore

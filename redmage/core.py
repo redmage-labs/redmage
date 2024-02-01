@@ -31,7 +31,6 @@ class Redmage:
         self.debug = debug
         self.middleware = middleware
         self.routes: List[Route] = []
-        self.components: List[Tuple[ComponentClass, Optional[Tuple[str]]]] = []
         # Could cause problems if multiple apps are created
         Component.set_app(self)
 
@@ -50,15 +49,10 @@ class Redmage:
         return self._starlette
 
     def create_routes(self) -> None:
-        for cls, routes in self.components:
+        for cls, routes in Component.components:
             if routes:
                 self._register_routes(cls, routes)
             self._register_targets(cls)
-
-    def register_component(
-        self, cls: ComponentClass, routes: Optional[Tuple[str]] = None
-    ) -> None:
-        self.components.append((cls, routes))
 
     def _get_explicit_route_function(self, cls: ComponentClass) -> Callable:
         async def route_function(request: Request) -> HTMLResponse:

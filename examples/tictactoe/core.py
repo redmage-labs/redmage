@@ -35,7 +35,6 @@ class Index(Component, routes=("/",)):
                 Script(src="https://unpkg.com/htmx.org@1.9.2"),
             ),
         )
-        print(await r._astr_())
         return r
 
 

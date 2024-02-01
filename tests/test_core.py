@@ -12,6 +12,14 @@ from redmage.exceptions import RedmageError
 from redmage.types import HTMXClass, HTMXHeaders, HTMXSwap
 
 
+@pytest.fixture(autouse=True)
+def redmage_app():
+    yield
+    # Reset app after each test
+    Component.app = None
+    Component.components = []
+
+
 def test_sanity():
     assert True
 
@@ -41,6 +49,17 @@ def test_redmage_create_app_with_middlware():
 
 
 def test_component_constructor():
+    app = Redmage()
+
+    class TestComponent(Component):
+        async def render(self):
+            ...
+
+    component = TestComponent()
+    assert component.id
+
+
+def test_component_registered_before_app():
     class TestComponent(Component):
         async def render(self):
             ...

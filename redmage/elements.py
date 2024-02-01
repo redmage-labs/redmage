@@ -37,15 +37,10 @@ class Element:
         **kwargs: str,
     ):
         # use the render method if it's component
-        def _async_helper(foo):  # type: ignore
-            async def inner() -> str:
-                return await astr(foo)
-
-            return inner
 
         self.content = list(
             [
-                _async_helper(c)
+                self._async_helper(c)
                 if isinstance(c, Element) or isinstance(c, Component)
                 else c
                 for c in content
@@ -86,8 +81,18 @@ class Element:
                 self.target = getattr(self, k)
                 self.trigger = Trigger(v)
 
+    def _async_helper(self, foo):  # type: ignore
+        async def inner() -> str:
+            return await astr(foo)
+
+        return inner
+
     def append(self, el: Union[str, hype.Element]) -> None:
-        self.content.append(el)
+        self.content.append(
+            self._async_helper(el)
+            if isinstance(el, Element) or isinstance(el, Component)
+            else el
+        )
 
     def attrs(self, **kwargs: str) -> None:
         self.kwargs = {**self.kwargs, **kwargs}
