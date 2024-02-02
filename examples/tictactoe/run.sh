@@ -2,4 +2,4 @@
 
 set -e
 
-uvicorn examples.tictactoe:app.starlette --log-level=debug --reload
+uvicorn examples.tictactoe:app.starlette --host '0.0.0.0' --log-level=debug --reload

@@ -12,6 +12,14 @@ from redmage.exceptions import RedmageError
 from redmage.types import HTMXClass, HTMXHeaders, HTMXSwap
 
 
+@pytest.fixture(autouse=True)
+def redmage_app():
+    yield
+    # Reset app after each test
+    Component.app = None
+    Component.components = []
+
+
 def test_sanity():
     assert True
 
@@ -41,9 +49,18 @@ def test_redmage_create_app_with_middlware():
 
 
 def test_component_constructor():
+    app = Redmage()
+
     class TestComponent(Component):
-        async def render(self):
-            ...
+        async def render(self): ...
+
+    component = TestComponent()
+    assert component.id
+
+
+def test_component_registered_before_app():
+    class TestComponent(Component):
+        async def render(self): ...
 
     component = TestComponent()
     assert component.id
@@ -324,8 +341,7 @@ def test_redmage_create_get_target():
             )
 
         @Target.get
-        def test_target(self, param1: int, param2: str = "init"):
-            ...
+        def test_target(self, param1: int, param2: str = "init"): ...
 
     client = TestClient(app.starlette)
     response = client.get("/TestComponent/1/test_target/0/?test_target__param2=init")
@@ -358,8 +374,7 @@ def test_redmage_create_get_target_with_optional_parameter():
             )
 
         @Target.get
-        def test_target(self, param1: int, param2: "Optional[int]" = None):
-            ...
+        def test_target(self, param1: int, param2: "Optional[int]" = None): ...
 
     client = TestClient(app.starlette)
     response = client.get("/TestComponent/1/test_target/1/?test_target__param2=None")
@@ -383,8 +398,7 @@ def test_redmage_create_get_target_with_annotation():
             )
 
         @Target.get
-        def test_target(self, param1: int, param2: str = "init"):
-            ...
+        def test_target(self, param1: int, param2: str = "init"): ...
 
     client = TestClient(app.starlette)
     response = client.get(
@@ -432,8 +446,7 @@ def test_redmage_create_post_target_swap():
             )
 
         @Target.post
-        def test_target(self, test_id: int, test: str = "foo"):
-            ...
+        def test_target(self, test_id: int, test: str = "foo"): ...
 
     client = TestClient(app.starlette)
     response = client.post("/TestComponent/1/test_target/1")
@@ -456,8 +469,7 @@ def test_redmage_create_post_target_indicator():
             )
 
         @Target.post
-        def test_target(self):
-            ...
+        def test_target(self): ...
 
     client = TestClient(app.starlette)
     response = client.post("/TestComponent/1/test_target")
@@ -483,8 +495,7 @@ def test_redmage_form():
             )
 
         @Target.post
-        def test_target(self, test_serializer: TestSerializer, /):
-            ...
+        def test_target(self, test_serializer: TestSerializer, /): ...
 
     client = TestClient(app.starlette)
     response = client.post("/TestComponent/1/test_target", data={"param1": 1})
@@ -506,8 +517,7 @@ def test_redmage_form_without_serializer():
             )
 
         @Target.post
-        def test_target(self):
-            ...
+        def test_target(self): ...
 
     client = TestClient(app.starlette)
     with pytest.raises(RedmageError):
@@ -600,8 +610,7 @@ def test_redamge_component_with_render_extenstion():
             return extension(Div(f"Hello World"))
 
         @Target.get
-        def test_target(self):
-            ...
+        def test_target(self): ...
 
     client = TestClient(app.starlette)
     response = client.get("/TestComponent/1/test_target")
@@ -626,8 +635,7 @@ def test_redamge_component_with_render_extenstion_var_keyword():
             return exts["extension"](Div(f"Hello World"))
 
         @Target.get
-        def test_target(self):
-            ...
+        def test_target(self): ...
 
     client = TestClient(app.starlette)
     response = client.get("/TestComponent/1/test_target")
