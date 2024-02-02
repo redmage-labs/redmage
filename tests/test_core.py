@@ -119,6 +119,32 @@ def test_redmage_register_component_with_get_target_with_args():
     assert response.text.strip() == '<div id="TestComponent-1">Hello World 1 test</div>'
 
 
+def test_redmage_register_component_with_get_async_target():
+    app = Redmage()
+
+    class TestComponent(Component):
+        async def render(self):
+            return Div(f"Hello World {self.param1} {self.param2}")
+
+        @Target.get
+        async def test_target(self, param1: int, param2: str):
+            self.param1 = param1
+            self.param2 = param2
+
+    app.create_routes()
+    assert len(app.routes) == 1
+    assert app.routes[0].name == "test_target"
+    assert (
+        app.routes[0].path
+        == "/TestComponent/{id:str}/test_target/{test_target__param1:int}/{test_target__param2:str}"
+    )
+
+    client = TestClient(app.starlette)
+    response = client.get("/TestComponent/1/test_target/1/test")
+    # assert response.status_code == 200
+    # assert response.text.strip() == '<div id="TestComponent-1">Hello World 1 test</div>'
+
+
 def test_redmage_register_component_with_post_target_with_args():
     app = Redmage()
 
@@ -560,6 +586,32 @@ def test_redmage_component_that_returns_multiple_components():
 
         @Target.get
         def test_target(self):
+            child = ChildComponent()
+            child._id = "ChildComponent-1"
+            return child, child
+
+    client = TestClient(app.starlette)
+    response = client.get("/TestComponent/1/test_target")
+    assert response.status_code == 200
+    assert (
+        response.text.strip()
+        == '<div id="ChildComponent-1">Hello Child</div>\n\n<div id="ChildComponent-1">Hello Child</div>'
+    )
+
+
+def test_redmage_component_that_returns_multiple_components_async():
+    app = Redmage()
+
+    class ChildComponent(Component):
+        async def render(self):
+            return Div(f"Hello Child")
+
+    class TestComponent(Component):
+        async def render(self):
+            return Div(f"Hello World")
+
+        @Target.get
+        async def test_target(self):
             child = ChildComponent()
             child._id = "ChildComponent-1"
             return child, child
