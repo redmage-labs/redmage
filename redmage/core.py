@@ -1,5 +1,5 @@
 import logging
-from inspect import Parameter, getmembers, isfunction, signature
+from inspect import Parameter, getmembers, iscoroutine, isfunction, signature
 from types import FunctionType
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
 
@@ -100,6 +100,11 @@ class Redmage:
                     instance,
                     **{**comp_params, **comp_query_params},
                 )
+
+            # If the target function is async we need to await it
+            if iscoroutine(components):
+                components = await components
+
             if isinstance(components, tuple):
                 return instance.build_response(
                     "\n".join([await astr(c) for c in components])
