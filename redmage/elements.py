@@ -1,3 +1,4 @@
+import html
 from typing import Optional, Tuple, Type, Union
 
 import hype.asyncio as hype
@@ -15,6 +16,7 @@ class Element:
     def __init__(
         self,
         *content: Union[str, hype.Element, Component],
+        safe: bool = False,
         # hx-* attributes
         swap: str = HTMXSwap.OUTER_HTML,
         target: Optional[Target] = None,
@@ -36,6 +38,7 @@ class Element:
         revealed: Optional[Target] = None,
         **kwargs: str,
     ):
+        self.safe = safe
         # use the render method if it's component
 
         self.content = list(
@@ -43,7 +46,7 @@ class Element:
                 (
                     self._async_helper(c)
                     if isinstance(c, Element) or isinstance(c, Component)
-                    else c
+                    else self.escape(c)  # type: ignore
                 )
                 for c in content
             ]
@@ -89,11 +92,16 @@ class Element:
 
         return inner
 
+    def escape(self, el: str) -> str:
+        if self.safe:
+            return el
+        return html.escape(str(el))
+
     def append(self, el: Union[str, hype.Element]) -> None:
         self.content.append(
             self._async_helper(el)
             if isinstance(el, Element) or isinstance(el, Component)
-            else el
+            else self.escape(el)  # type: ignore
         )
 
     def attrs(self, **kwargs: str) -> None:
@@ -106,6 +114,9 @@ class Element:
 
         el = self.el(
             *self.content,
+            # don't want hype to escape the content
+            # we'll do it ourselves
+            safe=True,
             _class=_class,
             **self.kwargs,
         )

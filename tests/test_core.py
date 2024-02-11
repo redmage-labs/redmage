@@ -291,6 +291,47 @@ def test_redmage_register_component_nested():
     )
 
 
+def test_redmage_escape_element_content():
+    app = Redmage()
+
+    class TestComponent(Component, routes=("/",)):
+        async def render(self):
+            return Div("<h1>test</h1>")
+
+        @property
+        def id(self) -> str:
+            return "TestComponent-1"
+
+    app.create_routes()
+
+    client = TestClient(app.starlette)
+    response = client.get("/")
+    assert response.status_code == 200
+    assert (
+        response.text.strip()
+        == '<div id="TestComponent-1">&lt;h1&gt;test&lt;/h1&gt;</div>'
+    )
+
+
+def test_redmage_do_not_escape_element_content():
+    app = Redmage()
+
+    class TestComponent(Component, routes=("/",)):
+        async def render(self):
+            return Div("<h1>test</h1>", safe=True)
+
+        @property
+        def id(self) -> str:
+            return "TestComponent-1"
+
+    app.create_routes()
+
+    client = TestClient(app.starlette)
+    response = client.get("/")
+    assert response.status_code == 200
+    assert response.text.strip() == '<div id="TestComponent-1"><h1>test</h1></div>'
+
+
 def test_redmage_register_component_with_get_target_with_query_params():
     app = Redmage()
 
@@ -516,7 +557,7 @@ def test_redmage_form():
     class TestComponent(Component):
         async def render(self):
             return Form(
-                Input(name="param1", value=1).render(),
+                Input(name="param1", value=1),
                 target=self.test_target(),
             )
 
@@ -528,7 +569,7 @@ def test_redmage_form():
     assert response.status_code == 200
     assert (
         response.text.strip()
-        == f'<form id="TestComponent-1" hx-swap="{HTMXSwap.OUTER_HTML}" hx-target="#TestComponent-1" hx-post="/TestComponent/1/test_target">\n  <input name="param1" value="1"/>\n</form>'
+        == f'<form id="TestComponent-1" hx-swap="{HTMXSwap.OUTER_HTML}" hx-target="#TestComponent-1" hx-post="/TestComponent/1/test_target">\n<input name="param1" value="1"/></form>'
     )
 
 
