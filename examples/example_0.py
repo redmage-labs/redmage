@@ -19,7 +19,7 @@ class Counter(Component, routes=("/",)):
                 "Add 1",
                 click=self.add_one(),
             ),
-            Script(src="https://unpkg.com/htmx.org@1.9.2"),
+            Script(src="https://unpkg.com/htmx.org@2.0.0-beta4"),
         )
 
     @Target.post
