@@ -13,7 +13,7 @@ class Index(Component, routes=("/",)):
                 Head(Title("Redmage | Example 3")),
                 Body(
                     ClickComponent(),
-                    Script(src="https://unpkg.com/htmx.org@1.9.2"),
+                    Script(src="https://unpkg.com/htmx.org@2.0.0-beta4"),
                 ),
             )
         )
