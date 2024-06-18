@@ -29,7 +29,7 @@ class Index(Component, routes=("/",)):
                 ),
                 Body(
                     Message("Initial message"),
-                    Script(src="https://unpkg.com/htmx.org@2.0.0-beta4"),
+                    Script(src="https://unpkg.com/htmx.org@2.0.0/dist/htmx.min.js"),
                 ),
             )
         )

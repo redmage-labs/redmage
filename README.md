@@ -2,7 +2,7 @@
 
 [![run-tests](https://github.com/redmage-labs/redmage/actions/workflows/main.yaml/badge.svg)](https://github.com/redmage-labs/redmage/actions/workflows/main.yaml)
 
-Redmage is component based library for building [htmx](https://htmx.org/) powered web applications.
+Redmage is reactive component framework for building [htmx](https://htmx.org/) powered web applications.
 
 It is built on top of the [starlette](https://www.starlette.io/) web framework.
 
@@ -33,7 +33,7 @@ class Counter(Component, routes=("/",)):
                 "Add 1",
                 click=self.add_one(),
             ),
-            Script(src="https://unpkg.com/htmx.org@2.0.0-beta4"),
+            Script(src="https://unpkg.com/htmx.org@2.0.0/dist/htmx.min.js"),
         )
 
     @Target.post
@@ -102,7 +102,7 @@ class Index(Component, routes=("/",)):
                 ),
                 Body(
                     H1("Hello Redmage"),
-                    Script(src="https://unpkg.com/htmx.org@2.0.0-beta4"),
+                    Script(src="https://unpkg.com/htmx.org@2.0.0/dist/htmx.min.js"),
                 ),
             )
         )
@@ -188,7 +188,7 @@ class Index(Component, routes=("/",)):
                 ),
                 Body(
                     ChildComponent(),
-                    Script(src="https://unpkg.com/htmx.org@2.0.0-beta4"),
+                    Script(src="https://unpkg.com/htmx.org@2.0.0/dist/htmx.min.js"),
                 ),
             )
         )
